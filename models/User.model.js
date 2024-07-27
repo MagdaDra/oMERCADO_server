@@ -15,11 +15,11 @@ const userSchema = new Schema(
 			required: [true, 'Password is required.'],
 			minLength: 8,
 		},
+		typeOfUser: { type: String, required: true, enum: ['Customer', 'Seller'] },
 		name: {
 			type: String,
 		},
 		img: { type: String },
-		typeOfUser: { type: String, required: true, enum: ['Customer', 'Seller'] },
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
 		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
 	},
