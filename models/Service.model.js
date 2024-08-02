@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose');
 const serviceSchema = new Schema({
 	serviceName: { type: String, required: true },
 	serviceDescription: { type: String, required: true },
+	price: Number,
 	quantity: {
 		type: Number,
 		required: true,

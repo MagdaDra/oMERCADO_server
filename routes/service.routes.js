@@ -1,12 +1,14 @@
 const router = require('express').Router();
 const Service = require('../models/Service.model');
 const User = require('../models/User.model');
+const Comment = require('../models/Comment.model')
 
 router.post('/services', async (req, res, next) => {
 	try {
 		const {
 			serviceName,
 			serviceDescription,
+			price,
 			quantity,
 			date,
 			img,
@@ -18,6 +20,7 @@ router.post('/services', async (req, res, next) => {
 		const newService = await Service.create({
 			serviceName,
 			serviceDescription,
+			price,
 			quantity,
 			date,
 			img,
@@ -25,7 +28,7 @@ router.post('/services', async (req, res, next) => {
 			createdBy,
 		});
 
-		// add the service to the user
+		// add the service offered to the user
 		const offeredService = await User.findByIdAndUpdate(createdBy, {
 			$push: {
 				servicesOffered: newService._id, // adding Id of a new service to the user

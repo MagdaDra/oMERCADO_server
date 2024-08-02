@@ -22,6 +22,12 @@ const userSchema = new Schema(
 		img: { type: String },
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
 		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
+		cart: [
+			{
+				serviceId:{type: Schema.Types.ObjectId, ref: 'Service'},
+				quantity: Number
+			}
+		]
 	},
 	{
 		// this second object adds extra properties: `createdAt` and `updatedAt`
