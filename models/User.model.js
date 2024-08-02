@@ -25,7 +25,8 @@ const userSchema = new Schema(
 		cart: [
 			{
 				serviceId:{type: Schema.Types.ObjectId, ref: 'Service'},
-				quantity: Number
+				quantity: Number,
+				price: Number
 			}
 		]
 	},
