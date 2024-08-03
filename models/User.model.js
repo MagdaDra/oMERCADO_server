@@ -22,6 +22,7 @@ const userSchema = new Schema(
 		img: { type: String },
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
 		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
+		comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
 	},
 	{
 		// this second object adds extra properties: `createdAt` and `updatedAt`

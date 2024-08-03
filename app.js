@@ -31,7 +31,10 @@ const transactionRoutes = require('./routes/transaction.routes');
 app.use('/api', transactionRoutes);
 
 const checkoutRoutes = require('./routes/checkout.routes');
-app.use('/api', checkoutRoutes)
+app.use('/api', checkoutRoutes);
+
+const commentRoutes = require('./routes/comment.routes');
+app.use('/api', commentRoutes);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require('./error-handling')(app);
