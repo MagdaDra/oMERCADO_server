@@ -20,7 +20,7 @@ const userSchema = new Schema(
 			type: String,
 		},
 		img: { type: String },
-		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
+		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
 		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
 	},
 	{

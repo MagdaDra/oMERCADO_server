@@ -1,50 +1,64 @@
 const router = require('express').Router();
 const User = require('../models/User.model');
 const Service = require('../models/Service.model');
+const Transaction = require('../models/Transaction.model');
 
-router.put('/checkout', async (req, res, next) => {
-    try {
-        const {userId, cart} = req.body
+router.post('/checkout', async (req, res, next) => {
+	try {
+		const { userId, cart, total } = req.body;
 
-        // Find the user
-		const user = await User.findById(userId);
+		// Create an array of serviceIds in the cart
+		let cartIds = cart.map((item) => item.serviceId);
 
-        // Check if the quantity of the service in the cart array is less than the array of the service available
+		// Find the serviceIds from the cart in the services array
+		const availableServices = await Service.find({
+			_id: {
+				$in: cartIds,
+			},
+		});
 
-        const cartArray = user.cart;
+		let errorArray = [];
 
-        let payment = false
+		// Check if quantity of items added to cart is bigger than items available - if yes, push the item to the errorArray
 
-        cartArray.map((cartItem) => {
-            const service = await Service.findById(cartItem.serviceId)
+		for (let i = 0; i < availableServices.length; i++) {
+			if (cart[i].quantity > availableServices[i].quantity) {
+				errorArray.push(availableServices[i]);
+			}
+		}
 
-            if (service.quantity >= cartItem.quantity) {
-                payment = true
-            } else {
-                payment = false
-            }
-        })
+		if (errorArray.length === 0) {
+			const newTransaction = await Transaction.create({
+				cart,
+				total,
+				userId: userId || null,
+			});
+			await User.findByIdAndUpdate(userId, {
+				$push: {
+					servicesBought: newTransaction._id,
+				},
+			});
 
+			// Remove the quantities of each product from the stock
+			cart.forEach(async (item) => {
+				const service = await Service.findById(item.serviceId);
+				service.quantity -= item.quantity;
+				await service.save();
+			});
 
-
-    } catch (error) {
-        console.error(error)
-    }
-})
-
-//check if the quantity of the service in the cart array is less thant the array of the service available
-
-// sum the prices of the items
-
-// remove the items from the stock
-
-// add to servicesBought routes
-
-
-// const boughtService = await User.findByIdAndUpdate(userId, {
-// 	$push: {
-// 		servicesBought: addToCart._id,
-// 	},
-// });
+			res.status(200).json(newTransaction);
+		} else {
+			res.status(401).json({
+				message:
+					`Ooops, we have limited quantity of the services below: ${errorArray.map(
+						(service) => `${service.serviceName}, available: ${service.quantity} \n`,
+                        
+					).join(', ')} `,
+			});
+		}
+	} catch (error) {
+		console.error(error);
+	}
+});
 
 module.exports = router;
