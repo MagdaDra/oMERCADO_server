@@ -33,6 +33,7 @@ router.post('/checkout', async (req, res, next) => {
 				total,
 				userId: userId || null,
 			});
+
 			await User.findByIdAndUpdate(userId, {
 				$push: {
 					servicesBought: newTransaction._id,
@@ -49,11 +50,12 @@ router.post('/checkout', async (req, res, next) => {
 			res.status(200).json(newTransaction);
 		} else {
 			res.status(401).json({
-				message:
-					`Ooops, we have limited quantity of the services below: ${errorArray.map(
-						(service) => `${service.serviceName}, available: ${service.quantity} \n`,
-                        
-					).join(', ')} `,
+				message: `Ooops, we have limited quantity of the services below: ${errorArray
+					.map(
+						(service) =>
+							`${service.serviceName}, available: ${service.quantity} \n`,
+					)
+					.join(', ')} `,
 			});
 		}
 	} catch (error) {
