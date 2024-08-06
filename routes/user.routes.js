@@ -8,7 +8,10 @@ const bcrypt = require('bcryptjs');
 router.get('/user/:userId', async (req, res, next) => {
 	try {
 		const { userId } = req.params;
-		const user = await User.findById(userId).populate('servicesBought', 'servicesOffered');
+		const user = await User.findById(userId)
+			.populate('servicesBought')
+			.populate('servicesOffered')
+			.populate('comments')
 
 		res.status(200).json(user);
 	} catch (error) {

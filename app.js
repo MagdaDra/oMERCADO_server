@@ -27,9 +27,6 @@ app.use('/api', serviceRoutes);
 const userRoutes = require('./routes/user.routes');
 app.use('/api', userRoutes);
 
-const transactionRoutes = require('./routes/transaction.routes');
-app.use('/api', transactionRoutes);
-
 const checkoutRoutes = require('./routes/checkout.routes');
 app.use('/api', checkoutRoutes);
 
