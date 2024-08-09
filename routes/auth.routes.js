@@ -22,7 +22,7 @@ router.post("/signup", (req, res, next) => {
 
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || typeOfUser === "") {
-    res.status(400).json({ message: "Provide email, password and name" });
+    res.status(400).json({ message: "Provide type of user, email and password" });
     return;
   }
 
@@ -33,7 +33,7 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
+  // This regular expression checks password for special characters and minimum length. 8 characters, uppercase letter, lowercase letter, number
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}/
 ;
   if (!passwordRegex.test(password)) {
