@@ -11,8 +11,8 @@ const serviceSchema = new Schema({
 		max: 100,
 		default: 1,
 	},
-	date: { type: String },
-	img: { type: String },
+	date: String,
+	img: String ,
 	category: {
 		type: [String],
 		enum: [

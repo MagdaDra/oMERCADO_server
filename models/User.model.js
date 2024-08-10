@@ -16,13 +16,11 @@ const userSchema = new Schema(
 			minLength: 8,
 		},
 		typeOfUser: { type: String, required: true, enum: ['Customer', 'Seller'] },
-		name: {
-			type: String,
-		},
-		img: { type: String },
+		name: String,
+		img: String,
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
 		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
-		comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
+		comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 	},
 	{
 		// this second object adds extra properties: `createdAt` and `updatedAt`
