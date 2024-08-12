@@ -11,6 +11,7 @@ router.get('/user/:userId', async (req, res, next) => {
 		const user = await User.findById(userId)
 			.populate('servicesBought')
 			.populate('servicesOffered')
+			.populate('servicesSold')
 			.populate('comments')
 
 		res.status(200).json(user);

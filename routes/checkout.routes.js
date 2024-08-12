@@ -40,12 +40,34 @@ router.post('/checkout', async (req, res, next) => {
 				},
 			});
 
-			// Remove the quantities of each product from the stock
-			cart.forEach(async (item) => {
-				const service = await Service.findById(item.serviceId);
-				service.quantity -= item.quantity;
+
+		//Add to the service owner's 'services sold'
+
+		cart.forEach(async (item) => {
+			const ownerId = await Service.findById(item.serviceId).populate('createdBy')
+			await User.findByIdAndUpdate(ownerId, {
+				$push: {
+					servicesSold: item.serviceId
+				}
+			})
+		})
+
+		
+
+		// Remove the quantities of each product from the stock
+		cart.forEach(async (item) => {
+			const service = await Service.findById(item.serviceId);
+			service.quantity -= item.quantity;
+			// if quantity is 0, service should be removed from the array
+			if (service.quantity === 0) {
+				await Service.findByIdAndDelete(item.serviceId)
+			} else {
 				await service.save();
-			});
+			
+		}
+		});
+
+
 
 			res.status(200).json(newTransaction);
 		} else {

@@ -10,7 +10,7 @@ const transactionSchema = new Schema(
 			},
 		],
 		total: Number,
-		userId: { type: Schema.Types.ObjectId, ref: 'User' }
+		userId: { type: Schema.Types.ObjectId, ref: 'User' },
 	},
 	{
 		timestamps: true,
