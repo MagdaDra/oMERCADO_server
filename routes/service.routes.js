@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Service = require('../models/Service.model');
 const User = require('../models/User.model');
-const Comment = require('../models/Comment.model')
+const Comment = require('../models/Comment.model');
 
 router.post('/services', async (req, res, next) => {
 	try {
@@ -98,7 +98,18 @@ router.put('/services/:serviceId', async (req, res, next) => {
 router.delete('/services/:serviceId', async (req, res, next) => {
 	try {
 		const { serviceId } = req.params;
-		await Service.findOneAndDelete(serviceId);
+
+		// Delete the service by its ID
+		const serviceDeletion = Service.findOneAndDelete(serviceId);
+
+		// Find the user with the serviceId in their servicesOffered array and remove it 
+		const userUpdate = User.findOneAndUpdate(
+			{ servicesOffered: serviceId },
+			{ $pull: { servicesOffered: serviceId } },
+		);
+
+		// Run both operations simultaneously
+		await Promise.all([serviceDeletion, userUpdate])
 
 		res.status(204).send();
 	} catch (error) {
