@@ -68,7 +68,7 @@ router.get('/services/:serviceId', async (req, res, next) => {
 
 // Update by Id
 
-router.put('/services/:serviceId', async (req, res, next) => {
+router.put('/services/edit/:serviceId', async (req, res, next) => {
 	try {
 		const { serviceId } = req.params;
 		const { serviceName, serviceDescription, quantity, date, img, category } =
