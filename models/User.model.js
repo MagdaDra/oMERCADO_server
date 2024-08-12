@@ -15,7 +15,7 @@ const userSchema = new Schema(
 			required: [true, 'Password is required.'],
 			minLength: 8,
 		},
-		typeOfUser: { type: String, required: true, enum: ['Customer', 'Seller'] },
+		typeOfUser: [{ type: String, required: true, enum: ['Customer', 'Seller'] }],
 		name: String,
 		img: String,
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
