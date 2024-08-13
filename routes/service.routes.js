@@ -13,7 +13,7 @@ router.post('/services', async (req, res, next) => {
 			date,
 			img,
 			category,
-			createdBy,
+			createdBy
 		} = req.body;
 
 		// create a new service
@@ -26,6 +26,7 @@ router.post('/services', async (req, res, next) => {
 			img,
 			category,
 			createdBy,
+			isActive: quantity > 0
 		});
 
 		// add the service offered to the user
