@@ -45,9 +45,9 @@ router.post('/services', async (req, res, next) => {
 
 router.get('/services', async (req, res, next) => {
 	try {
-		const allServices = await Service.find();
+		const activeServices = await Service.find({isActive: true});
 
-		res.status(200).json(allServices);
+		res.status(200).json(activeServices);
 	} catch (error) {
 		console.error(error);
 	}

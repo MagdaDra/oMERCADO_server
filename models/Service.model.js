@@ -7,12 +7,12 @@ const serviceSchema = new Schema({
 	quantity: {
 		type: Number,
 		required: true,
-		min: 1,
+		min: 0,
 		max: 100,
 		default: 1,
 	},
 	date: String,
-	img: String ,
+	img: String,
 	category: {
 		type: [String],
 		enum: [
@@ -29,6 +29,8 @@ const serviceSchema = new Schema({
 	},
 	createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
 	comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+	isActive: { type: Boolean, default: true }
+
 });
 
 const Service = model('Service', serviceSchema);

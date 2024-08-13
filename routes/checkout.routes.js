@@ -34,42 +34,48 @@ router.post('/checkout', async (req, res, next) => {
 				userId: userId || null,
 			});
 
+			// Remove the quantities of each product from the stock
+			await Promise.all(
+				cart.map(async (item) => {
+					const service = await Service.findById(item.serviceId);
+					service.quantity -= item.quantity;
+					// if qunatity = 0, desactivate the product and remove it from user's services offered
+					if (service.quantity === 0){
+						service.isActive = false
+						await User.findByIdAndUpdate(service.createdBy, {
+							$pull: { servicesOffered: item.serviceId }
+						});						
+
+					}
+					await service.save();
+					
+				}),
+			);
+
+			// Update buyer's servicesBought array
 			await User.findByIdAndUpdate(userId, {
 				$push: {
 					servicesBought: newTransaction._id,
 				},
 			});
 
+			//Add to the seller's servicesSold array
 
-		//Add to the service owner's 'services sold'
+			await Promise.all(
+				cart.map(async (item) => {
+					const service = await Service.findById(item.serviceId);
+					const ownerId = service.createdBy;
 
-		cart.forEach(async (item) => {
-			const ownerId = await Service.findById(item.serviceId).populate('createdBy')
-			await User.findByIdAndUpdate(ownerId, {
-				$push: {
-					servicesSold: item.serviceId
-				}
-			})
-		})
-
-		
-
-		// Remove the quantities of each product from the stock
-		cart.forEach(async (item) => {
-			const service = await Service.findById(item.serviceId);
-			service.quantity -= item.quantity;
-			// if quantity is 0, service should be removed from the array
-			if (service.quantity === 0) {
-				await Service.findByIdAndDelete(item.serviceId)
-			} else {
-				await service.save();
-			
-		}
-		});
-
-
-
+					await User.findByIdAndUpdate(ownerId, {
+						$push: {
+							servicesSold: item.serviceId,
+						},
+					});
+				}),
+			);
 			res.status(200).json(newTransaction);
+
+			
 		} else {
 			res.status(401).json({
 				message: `Ooops, we have limited quantity of the services below: ${errorArray
