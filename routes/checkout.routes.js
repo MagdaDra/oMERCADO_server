@@ -91,4 +91,21 @@ router.post('/checkout', async (req, res, next) => {
 	}
 });
 
+router.post('/cartInfo', async (req, res, next) => {
+	try {
+		const {cart} = req.body
+		let cartIds = cart.map((item) => item._id);
+		console.log('Cart: ',cart)
+		const cartServices = await Service.find({
+			_id: {
+				$in: cartIds,
+			},
+		});
+		res.status(200).json(cartServices)
+
+	} catch (error) {
+		console.error(error)
+	}
+}) 
+
 module.exports = router;
