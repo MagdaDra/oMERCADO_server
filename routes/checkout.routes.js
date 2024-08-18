@@ -104,4 +104,16 @@ router.post('/cartInfo', async (req, res, next) => {
 	}
 });
 
+
+// GET Transaction by Id
+
+router.get('/transaction/:transactionId', async (req, res, next) => {
+	try {
+		const { transactionId } = req.params;
+		const transaction = await Transaction.findById(transactionId)
+			.populate('cart')
+			
+	} catch (error) {}
+});
+
 module.exports = router;

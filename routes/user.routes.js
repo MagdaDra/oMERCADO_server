@@ -2,8 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User.model');
 const bcrypt = require('bcryptjs');
 
-
-// GET by Id
+// GET user by Id
 
 router.get('/user/:userId', async (req, res, next) => {
 	try {
@@ -12,7 +11,7 @@ router.get('/user/:userId', async (req, res, next) => {
 			.populate('servicesBought')
 			.populate('servicesOffered')
 			.populate('servicesSold')
-			.populate('comments')
+			.populate('comments');
 
 		res.status(200).json(user);
 	} catch (error) {
@@ -20,29 +19,28 @@ router.get('/user/:userId', async (req, res, next) => {
 	}
 });
 
-// Update by Id
+
+// Update user by Id
 
 router.put('/user/:userId', async (req, res, next) => {
 	try {
 		const { userId } = req.params;
 		const { email, password, typeOfUser, name, img } = req.body;
 
-        		// check if password is valid
+		// check if password is valid
 		const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; // {min amount, max amount}
 
-        
 		if (!passwordRegex.test(password)) {
-            res.status(400).json({
-                message:
-                'Your password needs to contain at least a number, a lowercase letter, an uppercase letter and have at least 6 characters',
+			res.status(400).json({
+				message:
+					'Your password needs to contain at least a number, a lowercase letter, an uppercase letter and have at least 6 characters',
 			});
 			return;
 		}
 
-        const saltRounds = 10;
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hashedPassword = bcrypt.hashSync(password, salt);
-
+		const saltRounds = 10;
+		const salt = bcrypt.genSaltSync(saltRounds);
+		const hashedPassword = bcrypt.hashSync(password, salt);
 
 		const updatedUser = await User.findByIdAndUpdate(
 			userId,
