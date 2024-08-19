@@ -15,8 +15,9 @@ const serviceSchema = new Schema({
 	img: String,
 	category: {
 		type: [String],
+		required: true,
 		enum: [
-			'IT',
+			'Technology',
 			'Art',
 			'Design',
 			'Sport',
