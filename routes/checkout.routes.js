@@ -67,7 +67,7 @@ router.post('/checkout', async (req, res, next) => {
 
 					await User.findByIdAndUpdate(ownerId, {
 						$push: {
-							servicesSold: item._id,
+							servicesSold: {serviceId: item._id, quantity: item.quantity}
 						},
 					});
 				}),

@@ -20,8 +20,13 @@ const userSchema = new Schema(
 		name: String,
 		img: String,
 		servicesBought: [{ type: Schema.Types.ObjectId, ref: 'Transaction' }],
-		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
-		servicesSold: [{ type: Schema.Types.ObjectId, ref: 'Service' }],
+		servicesOffered: [{ type: Schema.Types.ObjectId, ref: 'Service' }]	,
+		servicesSold: [
+			{
+				serviceId: { type: Schema.Types.ObjectId, ref: 'Service' },
+				quantity: Number
+			}
+		],
 		comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
 	},
 	{

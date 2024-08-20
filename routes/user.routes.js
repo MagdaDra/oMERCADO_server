@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/User.model');
+const Service = require('../models/Service.model');
 const bcrypt = require('bcryptjs');
 
 // GET user by Id
@@ -7,18 +8,58 @@ const bcrypt = require('bcryptjs');
 router.get('/user/:userId', async (req, res, next) => {
 	try {
 		const { userId } = req.params;
-		const user = await User.findById(userId)
-			.populate('servicesBought')
-			.populate('servicesOffered')
-			.populate('servicesSold')
-			.populate('comments');
+		const user = await User.findById(userId).populate('servicesBought')
+		.populate('servicesOffered')
+		.populate('comments');
 
-		res.status(200).json(user);
+		const servicesIds = user.servicesBought
+			.map((transaction) =>
+				transaction.cart.map((individualService) => individualService._id),
+			)
+			.flat();
+
+		const servicesInfo = await Service.find({ _id: { $in: servicesIds } });
+
+
+	const completeServicesBought = user.servicesBought
+			.map((transaction) =>
+				transaction.cart.map((item) => {
+					return {
+						quantity: item.quantity,
+						//add price if needed
+						service: servicesInfo.find(
+							(ser) => ser._id.toString() === item._id.toString(),
+						),
+					};
+				}),
+			)
+			.flat();
+
+
+const servicesSoldIds = user.servicesSold.map((ser) => ser.serviceId)
+const servicesSoldInfo = await Service.find({ _id: { $in: servicesSoldIds } });
+
+const completeServicesSold = user.servicesSold.map((item) => {
+	return {
+		//add price here
+	quantity: item.quantity,
+	service: servicesSoldInfo.find(
+		(ser) => ser._id.toString() === item.serviceId.toString(),
+	),
+	}
+	})
+
+
+	//deep copy
+	const userCopy = JSON.parse(JSON.stringify(user))
+  userCopy.servicesSold = completeServicesSold;
+	userCopy.servicesBought = completeServicesBought;
+
+		res.status(200).json(userCopy);
 	} catch (error) {
 		console.error(error);
 	}
 });
-
 
 // Update user by Id
 
