@@ -26,7 +26,7 @@ router.get('/user/:userId', async (req, res, next) => {
 				transaction.cart.map((item) => {
 					return {
 						quantity: item.quantity,
-						//add price if needed
+						unitPrice: item.unitPrice,
 						service: servicesInfo.find(
 							(ser) => ser._id.toString() === item._id.toString(),
 						),
@@ -41,7 +41,7 @@ const servicesSoldInfo = await Service.find({ _id: { $in: servicesSoldIds } });
 
 const completeServicesSold = user.servicesSold.map((item) => {
 	return {
-		//add price here
+	price: item.unitPrice,
 	quantity: item.quantity,
 	service: servicesSoldInfo.find(
 		(ser) => ser._id.toString() === item.serviceId.toString(),

@@ -6,7 +6,7 @@ const transactionSchema = new Schema(
 			{
 				serviceId: { type: Schema.Types.ObjectId, ref: 'Service' },
 				quantity: Number,
-				price: Number,
+				unitPrice: Number,
 			},
 		],
 		total: Number,
