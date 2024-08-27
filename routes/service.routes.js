@@ -72,7 +72,7 @@ router.get('/services/:serviceId', async (req, res, next) => {
 router.put('/services/edit/:serviceId', async (req, res, next) => {
 	try {
 		const { serviceId } = req.params;
-		const { serviceName, serviceDescription, quantity, date, img, category } =
+		const { serviceName, serviceDescription, quantity, price, date, img, category } =
 			req.body;
 
 		const updatedService = await Service.findByIdAndUpdate(
@@ -80,6 +80,7 @@ router.put('/services/edit/:serviceId', async (req, res, next) => {
 			{
 				serviceName,
 				serviceDescription,
+				price,
 				quantity,
 				date,
 				img,
@@ -101,16 +102,17 @@ router.delete('/services/:serviceId', async (req, res, next) => {
 		const { serviceId } = req.params;
 
 		// Delete the service by its ID
-		const serviceDeletion = Service.findOneAndDelete(serviceId);
+		const serviceDeletion = await Service.findByIdAndDelete(serviceId);
+
 
 		// Find the user with the serviceId in their servicesOffered array and remove it 
-		const userUpdate = User.findOneAndUpdate(
-			{ servicesOffered: serviceId },
+		const userUpdate = await User.findByIdAndUpdate(
+			serviceDeletion.createdBy,
 			{ $pull: { servicesOffered: serviceId } },
 		);
 
 		// Run both operations simultaneously
-		await Promise.all([serviceDeletion, userUpdate])
+		//await Promise.all([serviceDeletion, userUpdate])
 
 		res.status(204).send();
 	} catch (error) {
