@@ -203,7 +203,7 @@ Components:
 
 ### Slides
 
-[Slides Link](http://slides.com) - The url to your _public_ presentation slides
+[Slides Link](https://docs.google.com/presentation/d/1488bwP0VfEAdxemp_pqvsktHaCsZcO2CSN1ev7ytroY/edit?usp=sharing) - The url to the product presentation slides
 
 ### Contributors
 
